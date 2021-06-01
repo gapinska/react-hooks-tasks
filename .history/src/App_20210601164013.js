@@ -18,21 +18,9 @@ const initialState = {
 }
 
 function App() {
-  const [data, setData] = useState()
+  const [data, setData] = useState(initialState.hits)
 
-  useEffect(() => {
-    setData(initialState.hits)
-  }, [])
-
-  const hit = {
-    objectID: "14273549",
-    title: "New hit",
-    url: "https://zapier.com/engineering/how-to-build-redux/",
-  }
-
-  const addHit = () => {
-    setData((prevData) => [...prevData, hit])
-  }
+  useEffect(() => {})
   return (
     <div>
       <div>
@@ -48,7 +36,7 @@ function App() {
       <div>
         <ul>
           {data?.map((item) => (
-            <li key={item.objectID}>
+            <li>
               <a href={item.url} target="_blank" rel="noopener noreferrer">
                 {item.title}
               </a>
@@ -56,7 +44,6 @@ function App() {
           ))}
         </ul>
       </div>
-      <button onClick={addHit}>Add hit</button>
     </div>
   )
 }

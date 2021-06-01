@@ -23,16 +23,6 @@ function App() {
   useEffect(() => {
     setData(initialState.hits)
   }, [])
-
-  const hit = {
-    objectID: "14273549",
-    title: "New hit",
-    url: "https://zapier.com/engineering/how-to-build-redux/",
-  }
-
-  const addHit = () => {
-    setData((prevData) => [...prevData, hit])
-  }
   return (
     <div>
       <div>
@@ -56,7 +46,6 @@ function App() {
           ))}
         </ul>
       </div>
-      <button onClick={addHit}>Add hit</button>
     </div>
   )
 }

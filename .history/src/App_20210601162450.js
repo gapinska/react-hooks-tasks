@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import "./App.css"
 import Counter from "./components/Counter"
 
@@ -18,25 +18,12 @@ const initialState = {
 }
 
 function App() {
-  const [data, setData] = useState()
-
-  useEffect(() => {
-    setData(initialState.hits)
-  }, [])
-
-  const hit = {
-    objectID: "14273549",
-    title: "New hit",
-    url: "https://zapier.com/engineering/how-to-build-redux/",
-  }
-
-  const addHit = () => {
-    setData((prevData) => [...prevData, hit])
-  }
+  const [data, setData] = useState(initialState.hits)
   return (
     <div>
       <div>
         <a
+          className="link-hook"
           href="https://reactjs.org/docs/hooks-reference.html"
           target="_blank"
           rel="noopener noreferrer"
@@ -47,16 +34,11 @@ function App() {
       {/* <Counter /> */}
       <div>
         <ul>
-          {data?.map((item) => (
-            <li key={item.objectID}>
-              <a href={item.url} target="_blank" rel="noopener noreferrer">
-                {item.title}
-              </a>
-            </li>
+          {data.map((item) => (
+            <li>{item.title}</li>
           ))}
         </ul>
       </div>
-      <button onClick={addHit}>Add hit</button>
     </div>
   )
 }

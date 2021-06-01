@@ -31,7 +31,8 @@ function App() {
   }
 
   const addHit = () => {
-    setData((prevData) => [...prevData, hit])
+    const newData = [...data, hit]
+    setData(newData)
   }
   return (
     <div>
@@ -56,7 +57,7 @@ function App() {
           ))}
         </ul>
       </div>
-      <button onClick={addHit}>Add hit</button>
+      <button>Add hit</button>
     </div>
   )
 }

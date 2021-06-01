@@ -31,7 +31,8 @@ function App() {
   }
 
   const addHit = () => {
-    setData((prevData) => [...prevData, hit])
+    // const newData = [...data, hit]
+    setData([...data, hit])
   }
   return (
     <div>

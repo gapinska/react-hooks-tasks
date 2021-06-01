@@ -30,9 +30,10 @@ function App() {
     url: "https://zapier.com/engineering/how-to-build-redux/",
   }
 
-  const addHit = () => {
-    setData((prevData) => [...prevData, hit])
-  }
+  // const addHit = () => {
+  //   const dataCopy = [...data]
+  //   setData(...dataCopy, { hit })
+  // }
   return (
     <div>
       <div>

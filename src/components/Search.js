@@ -1,26 +1,28 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react"
 import axios from "axios"
 
-const initialState = {
-  hits: [
-    {
-      objectID: "23325319",
-      title: "Guerrilla Public Service Redux (2017)",
-      url: "https://99percentinvisible.org/episode/guerrilla-public-service/",
-    },
-    {
-      objectID: "14273549",
-      title: "Build Yourself a Redux",
-      url: "https://zapier.com/engineering/how-to-build-redux/",
-    },
-  ],
-}
+// const initialState = {
+//   hits: [
+//     {
+//       objectID: "23325319",
+//       title: "Guerrilla Public Service Redux (2017)",
+//       url: "https://99percentinvisible.org/episode/guerrilla-public-service/",
+//     },
+//     {
+//       objectID: "14273549",
+//       title: "Build Yourself a Redux",
+//       url: "https://zapier.com/engineering/how-to-build-redux/",
+//     },
+//   ],
+// }
 
 function Search() {
   const [data, setData] = useState()
   const [query, setQuery] = useState("")
   const [searchPhrase, setSearchPhrase] = useState("")
-  const fetchData = (searchPhrase) => {
+  const [errors, setErrors] = useState(null)
+  const newSearch = useMemo(() => searchPhrase, [searchPhrase])
+  const fetchData = useCallback(() => {
     if (!searchPhrase) return
     axios
       .get(`https://hn.algolia.com/api/v1/search?query=${searchPhrase}`)
@@ -30,9 +32,9 @@ function Search() {
         setSearchPhrase("")
       })
       .catch((err) => {
-        console.log(err)
+        setErrors(err.message)
       })
-  }
+  }, [newSearch])
 
   const hit = {
     objectID: "14273549",
@@ -44,16 +46,14 @@ function Search() {
     setData((prevData) => [...prevData, hit])
   }
 
-  const newSearch = useMemo(() => searchPhrase, [searchPhrase])
-
   const handleChange = (e) => setQuery(e.target.value)
   const handleOnSubmit = (e) => {
     e.preventDefault()
     setSearchPhrase(query)
   }
   useEffect(() => {
-    fetchData(newSearch)
-  }, [newSearch])
+    fetchData()
+  }, [newSearch, fetchData])
   return (
     <div>
       <div>
@@ -70,15 +70,18 @@ function Search() {
         <input type="text" value={query} onChange={handleChange} />
       </form>
       <div>
-        <ul>
-          {data?.map((item) => (
-            <li key={item.objectID}>
-              <a href={item.url} target="_blank" rel="noopener noreferrer">
-                {item.title}
-              </a>
-            </li>
-          ))}
-        </ul>
+        {errors && <div>{errors}</div>}
+        {data && (
+          <ul>
+            {data?.map((item) => (
+              <li key={item.objectID}>
+                <a href={item.url} target="_blank" rel="noopener noreferrer">
+                  {item.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
       <button onClick={addHit}>Add hit</button>
     </div>

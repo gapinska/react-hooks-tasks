@@ -22,17 +22,21 @@ function Search() {
   const [searchPhrase, setSearchPhrase] = useState("")
   const [errors, setErrors] = useState(null)
   const newSearch = useMemo(() => searchPhrase, [searchPhrase])
+  const [isLoading, setIsLoading] = useState(false)
   const fetchData = useCallback(() => {
     if (!searchPhrase) return
+    setIsLoading(true)
     axios
       .get(`https://hn.algolia.com/api/v1/search?query=${searchPhrase}`)
       .then((res) => {
         const result = res.data
         setData(result.hits)
         setSearchPhrase("")
+        setIsLoading(false)
       })
       .catch((err) => {
         setErrors(err.message)
+        setIsLoading(false)
       })
   }, [newSearch])
 
@@ -46,7 +50,10 @@ function Search() {
     setData((prevData) => [...prevData, hit])
   }
 
-  const handleChange = (e) => setQuery(e.target.value)
+  const handleChange = (e) => {
+    setQuery(e.target.value)
+    setData(null)
+  }
   const handleOnSubmit = (e) => {
     e.preventDefault()
     setSearchPhrase(query)
@@ -71,15 +78,23 @@ function Search() {
       </form>
       <div>
         {errors && <div>{errors}</div>}
+        {isLoading && <div>Loading...</div>}
         {data && (
           <ul>
-            {data?.map((item) => (
-              <li key={item.objectID}>
-                <a href={item.url} target="_blank" rel="noopener noreferrer">
-                  {item.title}
-                </a>
-              </li>
-            ))}
+            {data?.map(
+              (item) =>
+                item.title && (
+                  <li key={item.objectID}>
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {item.title}
+                    </a>
+                  </li>
+                )
+            )}
           </ul>
         )}
       </div>

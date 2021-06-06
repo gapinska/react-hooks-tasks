@@ -1,5 +1,5 @@
-import React, { useState, useMemo, useCallback, axios, useEffect } from "react"
-
+import { useState, useEffect, useCallback, useMemo } from "react"
+import axios from "axios"
 export const useAPI = () => {
   const [data, setData] = useState()
   const [query, setQuery] = useState("")
@@ -7,7 +7,6 @@ export const useAPI = () => {
   const [errors, setErrors] = useState(null)
   const newSearch = useMemo(() => searchPhrase, [searchPhrase])
   const [isLoading, setIsLoading] = useState(false)
-
   const fetchData = useCallback(() => {
     if (!searchPhrase) return
     setIsLoading(true)
@@ -39,24 +38,24 @@ export const useAPI = () => {
     fetchData()
   }, [newSearch, fetchData])
 
-  const updateSearch = (query) => {
-    setQuery(query)
+  const updateChange = (value) => {
+    setQuery(value)
     setData(null)
   }
 
-  const submitSearch = () => {
+  const updateOnSubmit = () => {
     setSearchPhrase(query)
   }
 
   return {
+    updateChange,
+    updateOnSubmit,
     data,
     query,
     searchPhrase,
     errors,
     newSearch,
     isLoading,
-    updateSearch,
-    submitSearch,
     addHit,
   }
 }

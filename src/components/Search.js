@@ -16,7 +16,7 @@ import axios from "axios"
 //   ],
 // }
 
-function Search() {
+const useAPI = () => {
   const [data, setData] = useState()
   const [query, setQuery] = useState("")
   const [searchPhrase, setSearchPhrase] = useState("")
@@ -50,17 +50,53 @@ function Search() {
     setData((prevData) => [...prevData, hit])
   }
 
-  const handleChange = (e) => {
-    setQuery(e.target.value)
-    setData(null)
-  }
-  const handleOnSubmit = (e) => {
-    e.preventDefault()
-    setSearchPhrase(query)
-  }
   useEffect(() => {
     fetchData()
   }, [newSearch, fetchData])
+
+  const updateChange = (value) => {
+    setQuery(value)
+    setData(null)
+  }
+
+  const updateOnSubmit = () => {
+    setSearchPhrase(query)
+  }
+
+  return {
+    updateChange,
+    updateOnSubmit,
+    data,
+    query,
+    searchPhrase,
+    errors,
+    newSearch,
+    isLoading,
+    addHit,
+  }
+}
+
+function Search() {
+  const {
+    updateChange,
+    updateOnSubmit,
+    data,
+    query,
+    searchPhrase,
+    errors,
+    newSearch,
+    isLoading,
+    addHit,
+  } = useAPI()
+
+  const handleChange = (e) => {
+    updateChange(e.target.value)
+  }
+  const handleOnSubmit = (e) => {
+    e.preventDefault()
+    updateOnSubmit()
+  }
+
   return (
     <div>
       <div>

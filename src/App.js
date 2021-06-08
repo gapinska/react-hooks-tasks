@@ -1,6 +1,7 @@
 import React from "react"
 import "./App.css"
 import Search from "./components/Search"
+import Counter from "./components/Counter2"
 // import ListWithAddItem from "./components/ListWithAddItem"
 
 function App() {
@@ -8,6 +9,7 @@ function App() {
     <div>
       <Search />
       {/* <ListWithAddItem /> */}
+      <Counter />
     </div>
   )
 }

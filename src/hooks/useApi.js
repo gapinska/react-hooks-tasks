@@ -1,26 +1,31 @@
 import { useState, useEffect, useCallback, useMemo } from "react"
 import axios from "axios"
 export const useAPI = () => {
-  const [data, setData] = useState()
-  const [query, setQuery] = useState("")
-  const [searchPhrase, setSearchPhrase] = useState("")
-  const [errors, setErrors] = useState(null)
-  const newSearch = useMemo(() => searchPhrase, [searchPhrase])
-  const [isLoading, setIsLoading] = useState(false)
+  const [state, setState] = useState({
+    query: "",
+    data: "",
+    searchPhrase: "",
+    errors: null,
+    isLoading: false,
+  })
+  const newSearch = useMemo(() => state.searchPhrase, [state.searchPhrase])
+
   const fetchData = useCallback(() => {
-    if (!searchPhrase) return
-    setIsLoading(true)
+    if (!state.searchPhrase) return
+    setState({ ...state, isLoading: true })
     axios
-      .get(`https://hn.algolia.com/api/v1/search?query=${searchPhrase}`)
+      .get(`https://hn.algolia.com/api/v1/search?query=${state.searchPhrase}`)
       .then((res) => {
         const result = res.data
-        setData(result.hits)
-        setSearchPhrase("")
-        setIsLoading(false)
+        setState({
+          ...state,
+          data: result.hits,
+          searchPhrase: "",
+          isLoading: false,
+        })
       })
       .catch((err) => {
-        setErrors(err.message)
-        setIsLoading(false)
+        setState({ ...state, errors: err.message, isLoading: false })
       })
   }, [newSearch])
 
@@ -31,7 +36,7 @@ export const useAPI = () => {
   }
 
   const addHit = () => {
-    setData((prevData) => [...prevData, hit])
+    setState({ ...state, data: [...state.data, hit] })
   }
 
   useEffect(() => {
@@ -39,23 +44,18 @@ export const useAPI = () => {
   }, [newSearch, fetchData])
 
   const updateChange = (value) => {
-    setQuery(value)
-    setData(null)
+    setState({ ...state, query: value, data: null })
   }
 
   const updateOnSubmit = () => {
-    setSearchPhrase(query)
+    setState({ ...state, searchPhrase: state.query })
   }
 
   return {
     updateChange,
     updateOnSubmit,
-    data,
-    query,
-    searchPhrase,
-    errors,
+    state,
     newSearch,
-    isLoading,
     addHit,
   }
 }

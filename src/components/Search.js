@@ -17,17 +17,8 @@ import { useAPI } from "../hooks/useApi"
 // }
 
 function Search() {
-  const {
-    updateChange,
-    updateOnSubmit,
-    data,
-    query,
-    searchPhrase,
-    errors,
-    newSearch,
-    isLoading,
-    addHit,
-  } = useAPI()
+  const { updateChange, updateOnSubmit, state, query, newSearch, addHit } =
+    useAPI()
 
   const handleChange = (e) => {
     updateChange(e.target.value)
@@ -48,16 +39,15 @@ function Search() {
           Learn React Hooks
         </a>
       </div>
-      {/* <Counter /> */}
       <form onSubmit={handleOnSubmit}>
-        <input type="text" value={query} onChange={handleChange} />
+        <input type="text" value={state.query} onChange={handleChange} />
       </form>
       <div>
-        {errors && <div>{errors}</div>}
-        {isLoading && <div>Loading...</div>}
-        {data && (
+        {state.errors && <div>{state.errors}</div>}
+        {state.isLoading && <div>Loading...</div>}
+        {state.data && (
           <ul>
-            {data?.map(
+            {state.data?.map(
               (item) =>
                 item.title && (
                   <li key={item.objectID}>
